@@ -13,7 +13,7 @@ public class BookDTO {
 
     private String title;
     private String author;
-    private double price;
+    private Double price;
 
     @Override
     public String toString() {

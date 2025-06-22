@@ -21,21 +21,13 @@ public class BookController {
     @GetMapping
     public ResponseEntity<List<Book>> getAll() {
         List<Book> books = service.getAllBooks();
-        if (books != null && !books.isEmpty()) {
-            return ResponseEntity.ok(books); // 200 OK
-        } else {
-            return ResponseEntity.notFound().build(); // 404 Not Found
-        }
+        return ResponseEntity.ok(books); // 200 OK
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         Book book = service.getBookById(id);
-        if (book != null) {
-            return ResponseEntity.ok(book); // 200 OK
-        } else {
-            return ResponseEntity.notFound().build(); // 404 Not Found
-        }
+        return ResponseEntity.ok(book); // 200 OK
     }
 
     @PostMapping

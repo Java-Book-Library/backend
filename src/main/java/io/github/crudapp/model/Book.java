@@ -10,7 +10,7 @@ public class Book {
     private Long id;
     private String title;
     private String author;
-    private double price;
+    private Double price;
 
     @Override
     public String toString() {
