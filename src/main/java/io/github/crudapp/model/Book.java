@@ -1,25 +1,17 @@
 package io.github.crudapp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
-public class Book {
-
+public class Book extends AbstractBook {
     private Long id;
-    private String title;
-    private String author;
-    private Double price;
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", price=" + price +
-                '}';
+    public Book(Long id, String title, String author, Double price) {
+        super(title, author, price);
+        this.id = id;
     }
 
 }

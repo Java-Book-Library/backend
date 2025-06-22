@@ -52,7 +52,7 @@ public class BookRepositoryImpl implements BookRepository {
     public void update(Long id, BookDTO update) {
         if (update == null) return;
 
-        Field[] fields = BookDTO.class.getDeclaredFields();
+        Field[] fields = BookDTO.class.getSuperclass().getDeclaredFields();
 
         // Collect only fields that are not null
         List<Field> nonNullFields = Arrays.stream(fields)

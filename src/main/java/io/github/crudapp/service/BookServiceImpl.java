@@ -2,6 +2,7 @@ package io.github.crudapp.service;
 
 import io.github.crudapp.exception.BookNotFoundException;
 import io.github.crudapp.exception.InvalidBookException;
+import io.github.crudapp.model.AbstractBook;
 import io.github.crudapp.model.Book;
 import io.github.crudapp.model.BookDTO;
 import io.github.crudapp.repository.BookRepository;
@@ -17,19 +18,7 @@ public class BookServiceImpl implements BookService {
         this.repo = repo;
     }
 
-    private void validateBook(Book book) {
-        if (book == null) {
-            throw new BookNotFoundException("Book cannot be null");
-        }
-        if (book.getTitle() == null || book.getTitle().isBlank()) {
-            throw new InvalidBookException("Title cannot be empty");
-        }
-        if (book.getPrice() == null || book.getPrice() < 0) {
-            throw new InvalidBookException("Price cannot be negative");
-        }
-    }
-
-    private void validateBook(BookDTO book) {
+    private void validateBook(AbstractBook book) {
         if (book == null) {
             throw new BookNotFoundException("Book cannot be null");
         }
