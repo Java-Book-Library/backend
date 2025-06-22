@@ -1,10 +1,16 @@
 package io.github.crudapp.repository;
 
 import io.github.crudapp.model.Book;
+import io.github.crudapp.model.BookDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository {
@@ -42,6 +48,45 @@ public class BookRepositoryImpl implements BookRepository {
     public void save(Book book) {
         String sql = "INSERT INTO books (title, author, price) VALUES (?, ?, ?)";
         jdbc.update(sql, book.getTitle(), book.getAuthor(), book.getPrice());
+    }
+
+    public void update(Long id, BookDTO update) {
+        if (update == null) return;
+
+        Field[] fields = BookDTO.class.getDeclaredFields();
+
+        // Collect only fields that are not null
+        List<Field> nonNullFields = Arrays.stream(fields)
+                .filter(f -> {
+                    f.setAccessible(true);
+                    try {
+                        return f.get(update) != null;
+                    } catch (IllegalAccessException e) {
+                        return false;
+                    }
+                })
+                .toList();
+
+        if (nonNullFields.isEmpty()) return; // Nothing to update
+
+        String setClause = nonNullFields.stream()
+                .map(f -> f.getName() + " = ?")
+                .collect(Collectors.joining(", "));
+
+        String sql = "UPDATE books SET " + setClause + " WHERE id = ?";
+
+        List<Object> params = new ArrayList<>();
+        for (Field f : nonNullFields) {
+            try {
+                params.add(f.get(update));
+            } catch (IllegalAccessException e) {
+                System.err.println("Failed to access field: " + f.getName());
+                e.printStackTrace();
+            }
+        }
+        params.add(id);
+
+        jdbc.update(sql, params.toArray());
     }
 
     public void deleteById(Long id) {

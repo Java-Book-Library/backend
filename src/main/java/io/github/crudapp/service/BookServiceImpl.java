@@ -1,10 +1,12 @@
 package io.github.crudapp.service;
 
 import io.github.crudapp.model.Book;
+import io.github.crudapp.model.BookDTO;
 import io.github.crudapp.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -24,6 +26,10 @@ public class BookServiceImpl implements BookService {
 
     public void addBook(Book book) {
         repo.save(book);
+    }
+
+    public void updateBook(Long id, BookDTO update) {
+        repo.update(id, update);
     }
 
     public void deleteBookById(Long id) {
