@@ -31,10 +31,10 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        service.addBook(book);
-        URI location = URI.create("/api/books/" + book.getId());
-        return ResponseEntity.created(location).body(book); // 201 Created
+    public ResponseEntity<Book> addBook(@RequestBody BookDTO book) {
+        Book savedBook = service.addBook(book);
+        URI location = URI.create("/api/books/" + savedBook.getId());
+        return ResponseEntity.created(location).body(savedBook); // 201 Created
     }
 
     @PatchMapping("/{id}")

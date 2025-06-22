@@ -42,9 +42,16 @@ public class BookServiceImpl implements BookService {
         return book;
     }
 
-    public void addBook(Book book) {
+    public Book addBook(BookDTO book) {
         validateBook(book);
-        repo.save(book);
+        Book savedBook = repo.save(book);
+        if (savedBook == null) {
+            throw new InvalidBookException("Failed to save book");
+        }
+        if (savedBook.getId() == null) {
+            throw new InvalidBookException("Saved book has no id");
+        }
+        return savedBook;
     }
 
     public void updateBook(Long id, BookDTO update) {

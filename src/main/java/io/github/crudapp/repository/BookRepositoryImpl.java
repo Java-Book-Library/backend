@@ -3,9 +3,12 @@ package io.github.crudapp.repository;
 import io.github.crudapp.model.Book;
 import io.github.crudapp.model.BookDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,9 +47,24 @@ public class BookRepositoryImpl implements BookRepository {
         );
     }
 
-    public void save(Book book) {
+    public Book save(BookDTO book) {
+        GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+
         String sql = "INSERT INTO books (title, author, price) VALUES (?, ?, ?)";
-        jdbc.update(sql, book.getTitle(), book.getAuthor(), book.getPrice());
+        jdbc.update(conn -> {
+            // Pre-compiling sql
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            // Set parameters
+            ps.setString(1, book.getTitle());
+            ps.setString(2, book.getAuthor());
+            ps.setDouble(3, book.getPrice());
+            return ps;
+        }, generatedKeyHolder);
+
+        Long id = generatedKeyHolder.getKey().longValue();
+
+        Book savedBook = new Book(id, book.getTitle(), book.getAuthor(), book.getPrice());
+        return savedBook;
     }
 
     private List<Field> getNonNullFields(BookDTO update) {
