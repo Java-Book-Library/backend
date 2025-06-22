@@ -7,10 +7,9 @@ import java.util.List;
 public interface BookRepository {
 
     List<Book> findAll();
-    void save(Book book);
-    /*
     Book findById(Long id);
-    void delete(Book book);
-    */
+    void save(Book book);
+    void deleteById(Long id);
+    void deleteAll();
 
 }

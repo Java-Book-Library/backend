@@ -7,10 +7,9 @@ import java.util.List;
 public interface BookService {
 
     List<Book> getAllBooks();
-    void addBook(Book book);
-    /*
     Book getBookById(Long id);
-    void deleteBook(Book book);
-    */
+    void addBook(Book book);
+    void deleteBookById(Long id);
+    void deleteAllBooks();
 
 }

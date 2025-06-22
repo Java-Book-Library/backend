@@ -18,8 +18,20 @@ public class BookServiceImpl implements BookService {
         return repo.findAll();
     }
 
+    public Book getBookById(Long id) {
+        return repo.findById(id);
+    }
+
     public void addBook(Book book) {
         repo.save(book);
+    }
+
+    public void deleteBookById(Long id) {
+        repo.deleteById(id);
+    }
+
+    public void deleteAllBooks() {
+        repo.deleteAll();
     }
 
 }

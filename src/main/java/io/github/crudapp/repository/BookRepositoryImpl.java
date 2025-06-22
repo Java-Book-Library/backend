@@ -15,7 +15,8 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     public List<Book> findAll() {
-        return jdbc.query("SELECT * FROM books", (rs, rowNum) ->
+        String sql = "SELECT * FROM books";
+        return jdbc.query(sql, (rs, rowNum) ->
             new Book(
                 rs.getLong("id"),
                 rs.getString("title"),
@@ -25,9 +26,32 @@ public class BookRepositoryImpl implements BookRepository {
         );
     }
 
+    public Book findById(Long id) {
+        String sql = "SELECT * FROM books WHERE id = ?";
+        return jdbc.queryForObject(sql, (rs, rowNum) ->
+            new Book(
+                rs.getLong("id"),
+                rs.getString("title"),
+                rs.getString("author"),
+                rs.getDouble("price")
+            ),
+            id
+        );
+    }
+
     public void save(Book book) {
         String sql = "INSERT INTO books (title, author, price) VALUES (?, ?, ?)";
         jdbc.update(sql, book.getTitle(), book.getAuthor(), book.getPrice());
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM books WHERE id = ?";
+        jdbc.update(sql, id);
+    }
+
+    public void deleteAll() {
+        String sql = "TRUNCATE TABLE books";
+        jdbc.update(sql);
     }
 
 }
