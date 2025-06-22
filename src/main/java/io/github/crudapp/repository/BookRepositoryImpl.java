@@ -49,13 +49,10 @@ public class BookRepositoryImpl implements BookRepository {
         jdbc.update(sql, book.getTitle(), book.getAuthor(), book.getPrice());
     }
 
-    public void update(Long id, BookDTO update) {
-        if (update == null) return;
-
+    private List<Field> getNonNullFields(BookDTO update) {
         Field[] fields = BookDTO.class.getSuperclass().getDeclaredFields();
 
-        // Collect only fields that are not null
-        List<Field> nonNullFields = Arrays.stream(fields)
+        return Arrays.stream(fields)
                 .filter(f -> {
                     f.setAccessible(true);
                     try {
@@ -65,15 +62,15 @@ public class BookRepositoryImpl implements BookRepository {
                     }
                 })
                 .toList();
+    }
 
-        if (nonNullFields.isEmpty()) return; // Nothing to update
-
-        String setClause = nonNullFields.stream()
+    private String getSetClause(List<Field> fields) {
+        return fields.stream()
                 .map(f -> f.getName() + " = ?")
                 .collect(Collectors.joining(", "));
+    }
 
-        String sql = "UPDATE books SET " + setClause + " WHERE id = ?";
-
+    private List<Object> collectParameters(List<Field> nonNullFields, BookDTO update) {
         List<Object> params = new ArrayList<>();
         for (Field f : nonNullFields) {
             try {
@@ -83,8 +80,18 @@ public class BookRepositoryImpl implements BookRepository {
                 e.printStackTrace();
             }
         }
-        params.add(id);
+        return params;
+    }
 
+    public void update(Long id, BookDTO update) {
+        if (update == null) return;
+
+        List<Field> fields = getNonNullFields(update);
+        if (fields.isEmpty()) return; // Nothing to update
+
+        String setClause = getSetClause(fields);
+        String sql = "UPDATE books SET " + setClause + " WHERE id = ?";
+        List<Object> params = collectParameters(fields, update);
         jdbc.update(sql, params.toArray());
     }
 
