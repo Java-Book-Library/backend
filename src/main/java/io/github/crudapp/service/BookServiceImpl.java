@@ -2,9 +2,9 @@ package io.github.crudapp.service;
 
 import io.github.crudapp.exception.BookNotFoundException;
 import io.github.crudapp.exception.InvalidBookException;
-import io.github.crudapp.model.AbstractBook;
-import io.github.crudapp.model.Book;
-import io.github.crudapp.model.BookDTO;
+import io.github.crudapp.model.book.AbstractBook;
+import io.github.crudapp.model.book.Book;
+import io.github.crudapp.model.book.BookDTO;
 import io.github.crudapp.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class BookServiceImpl implements BookService {
         this.repo = repo;
     }
 
-    private void validateBook(AbstractBook book) {
+    private void validate(AbstractBook book) {
         if (book == null) {
             throw new BookNotFoundException("Book cannot be null");
         }
@@ -43,7 +43,7 @@ public class BookServiceImpl implements BookService {
     }
 
     public Book addBook(BookDTO book) {
-        validateBook(book);
+        validate(book);
         Book savedBook = repo.save(book);
         if (savedBook == null) {
             throw new InvalidBookException("Failed to save book");
@@ -58,7 +58,7 @@ public class BookServiceImpl implements BookService {
         if (repo.findById(id) == null) {
             throw new BookNotFoundException(id);
         }
-        validateBook(update);
+        validate(update);
         repo.update(id, update);
     }
 

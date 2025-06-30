@@ -1,7 +1,7 @@
 package io.github.crudapp.service;
 
-import io.github.crudapp.model.Book;
-import io.github.crudapp.model.BookDTO;
+import io.github.crudapp.model.book.Book;
+import io.github.crudapp.model.book.BookDTO;
 
 import java.util.List;
 

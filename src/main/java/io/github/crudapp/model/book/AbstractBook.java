@@ -1,4 +1,4 @@
-package io.github.crudapp.model;
+package io.github.crudapp.model.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

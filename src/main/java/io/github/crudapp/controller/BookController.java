@@ -1,7 +1,7 @@
 package io.github.crudapp.controller;
 
-import io.github.crudapp.model.Book;
-import io.github.crudapp.model.BookDTO;
+import io.github.crudapp.model.book.Book;
+import io.github.crudapp.model.book.BookDTO;
 import io.github.crudapp.service.BookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
