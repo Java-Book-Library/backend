@@ -75,6 +75,7 @@ public class UserRepositoryImpl implements UserRepository {
         String setClause = getSetClause(fields);
         String sql = "UPDATE users SET " + setClause + " WHERE id = ?";
         List<Object> params = collectParameters(fields, update);
+        params.add(id);
         jdbc.update(sql, params.toArray());
     }
 

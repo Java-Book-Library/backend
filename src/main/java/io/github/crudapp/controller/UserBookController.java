@@ -18,13 +18,13 @@ public class UserBookController {
         this.service = service;
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<Book>> getBooksByUserId(@PathVariable Long userId) {
         List<Book> users = service.getBooksByUserId(userId);
         return ResponseEntity.ok(users); // 200 OK
     }
 
-    @GetMapping("/book/{id}")
+    @GetMapping("/book/{bookId}")
     public ResponseEntity<List<UserDTO>> getUsersByBookId(@PathVariable Long bookId) {
         List<UserDTO> user = service.getUsersByBookId(bookId);
         return ResponseEntity.ok(user); // 200 OK

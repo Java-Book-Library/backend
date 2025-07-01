@@ -78,6 +78,7 @@ public class BookRepositoryImpl implements BookRepository {
         String setClause = getSetClause(fields);
         String sql = "UPDATE books SET " + setClause + " WHERE id = ?";
         List<Object> params = collectParameters(fields, update);
+        params.add(id);
         jdbc.update(sql, params.toArray());
     }
 
