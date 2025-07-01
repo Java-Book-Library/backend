@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserRepository {
 
     List<UserDTO> findAll();
-    UserDTO findById(Long id);
+    UserDTO findByName(String name);
     UserDTO save(User user);
     void update(Long id, User update);
     void deleteById(Long id);

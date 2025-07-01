@@ -1,7 +1,6 @@
 package io.github.crudapp.service;
 
-import io.github.crudapp.exception.BookNotFoundException;
-import io.github.crudapp.exception.InvalidBookException;
+import io.github.crudapp.exception.*;
 import io.github.crudapp.model.book.AbstractBook;
 import io.github.crudapp.model.book.Book;
 import io.github.crudapp.model.book.BookDTO;
@@ -37,40 +36,48 @@ public class UserServiceImpl implements UserService {
         return repo.findAll();
     }
 
-    public UserDTO getUserById(Long id) {
-        UserDTO user = repo.findById(id);
+    public UserDTO getUserByName(String name) {
+        UserDTO user = repo.findByName(name);
         if (user == null) {
-            throw new BookNotFoundException(id);
+            throw new UserNotFoundException(name);
         }
         return user;
     }
 
     public UserDTO addUser(User user) {
         validate(user);
+        // Check if user exists already
+        UserDTO foundUser = repo.findByName(user.getName());
+        if (foundUser != null) {
+            // Interrupt addUser
+            throw new UserAlreadyExistsException(user.getName());
+        }
+
+        // Add user
         UserDTO savedUser = repo.save(user);
         if (savedUser == null) {
-            throw new InvalidBookException("Failed to save user");
+            throw new InvalidUserException("Failed to save user");
         }
         if (savedUser.getId() == null) {
-            throw new InvalidBookException("Saved user has no id");
+            throw new InvalidUserException("Saved user has no id");
         }
         return savedUser;
     }
 
-    public void updateUser(Long id, User update) {
-        if (repo.findById(id) == null) {
-            throw new BookNotFoundException(id);
-        }
-        validate(update);
-        repo.update(id, update);
-    }
-
-    public void deleteUserById(Long id) {
-        if (repo.findById(id) == null) {
-            throw new BookNotFoundException(id);
-        }
-        repo.deleteById(id);
-    }
+//    public void updateUser(Long id, User update) {
+//        if (repo.findById(id) == null) {
+//            throw new BookNotFoundException(id);
+//        }
+//        validate(update);
+//        repo.update(id, update);
+//    }
+//
+//    public void deleteUserById(Long id) {
+//        if (repo.findById(id) == null) {
+//            throw new BookNotFoundException(id);
+//        }
+//        repo.deleteById(id);
+//    }
 
     public void deleteAllUsers() {
         repo.deleteAll();

@@ -4,6 +4,8 @@ import io.github.crudapp.model.book.Book;
 import io.github.crudapp.model.book.BookDTO;
 import io.github.crudapp.model.user.User;
 import io.github.crudapp.model.user.UserDTO;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -27,30 +29,41 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public List<UserDTO> findAll() {
-        String sql = "SELECT * FROM users";
-        return jdbc.query(sql, (rs, rowNum) ->
-            new UserDTO(
-                rs.getLong("id"),
-                rs.getString("name")
-            )
-        );
+        String sql = "SELECT id, name FROM users";
+        try {
+            return jdbc.query(sql, (rs, rowNum) ->
+                new UserDTO(
+                    rs.getLong("id"),
+                    rs.getString("name")
+                )
+            );
+        } catch (EmptyResultDataAccessException ex) {
+            return List.of();
+        }
+
     }
 
-    public UserDTO findById(Long id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
-        return jdbc.queryForObject(sql, (rs, rowNum) ->
-            new UserDTO(
-                rs.getLong("id"),
-                rs.getString("name")
-            ),
-            id
-        );
+    public UserDTO findByName(String name) {
+        String sql = "SELECT id, name FROM users WHERE name = ?";
+        try {
+            return jdbc.queryForObject(sql, (rs, rowNum) ->
+                new UserDTO(
+                    rs.getLong("id"),
+                    rs.getString("name")
+                ),
+                name
+            );
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        } catch (IncorrectResultSizeDataAccessException ex) {
+            throw new IllegalStateException("More than one user found with name: " + name, ex);
+        }
     }
 
     public UserDTO save(User user) {
         GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
 
-        String sql = "INSERT INTO books (name, password) VALUES (?, ?)";
+        String sql = "INSERT INTO users (name, password) VALUES (?, ?)";
         jdbc.update(conn -> {
             // Pre-compiling sql
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

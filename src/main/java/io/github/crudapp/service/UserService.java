@@ -10,10 +10,10 @@ import java.util.List;
 public interface UserService {
 
     List<UserDTO> getAllUsers();
-    UserDTO getUserById(Long id);
+    UserDTO getUserByName(String name);
     UserDTO addUser(User user);
-    void updateUser(Long id, User update);
-    void deleteUserById(Long id);
-    void deleteAllUsers();
+//    void updateUser(Long id, User update);
+//    void deleteUserById(Long id);
+//    void deleteAllUsers();
 
 }
