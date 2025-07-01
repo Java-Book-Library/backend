@@ -5,6 +5,7 @@ import io.github.crudapp.model.book.BookDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
@@ -87,9 +88,12 @@ public class BookRepositoryImpl implements BookRepository {
         jdbc.update(sql, id);
     }
 
+    @Transactional
     public void deleteAll() {
-        String sql = "TRUNCATE TABLE books";
-        jdbc.update(sql);
+        String deleteUserBookSql = "DELETE FROM user_book";
+        String deleteBooksSql = "DELETE FROM books";
+        jdbc.update(deleteUserBookSql);
+        jdbc.update(deleteBooksSql);
     }
 
 }
