@@ -18,12 +18,6 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = service.getAllUsers();
-        return ResponseEntity.ok(users); // 200 OK
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserByName(@PathVariable String name) {
         UserDTO user = service.getUserByName(name);
@@ -31,10 +25,17 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> addUser(@RequestBody User book) {
-        UserDTO savedUser = service.addUser(book);
-        URI location = URI.create("/api/books/" + savedUser.getId());
+    public ResponseEntity<UserDTO> addUser(@RequestBody User user) {
+        UserDTO savedUser = service.addUser(user);
+        URI location = URI.create("/api/users/" + savedUser.getId());
         return ResponseEntity.created(location).body(savedUser); // 201 Created
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> authenticateUser(@RequestBody User user) {
+        UserDTO foundUser = service.authenticateUser(user.getName(), user.getPassword());
+        URI location = URI.create("/api/users/" + foundUser.getId());
+        return ResponseEntity.created(location).body(foundUser); // 201 Created
     }
 
 //    @PatchMapping("/{id}")
@@ -46,12 +47,6 @@ public class UserController {
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
 //        service.deleteUserById(id);
-//        return ResponseEntity.noContent().build(); // 204 No Content
-//    }
-//
-//    @DeleteMapping
-//    public ResponseEntity<Void> deleteAllUsers() {
-//        service.deleteAllUsers();
 //        return ResponseEntity.noContent().build(); // 204 No Content
 //    }
 

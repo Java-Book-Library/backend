@@ -32,10 +32,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public List<UserDTO> getAllUsers() {
-        return repo.findAll();
-    }
-
     public UserDTO getUserByName(String name) {
         UserDTO user = repo.findByName(name);
         if (user == null) {
@@ -64,6 +60,25 @@ public class UserServiceImpl implements UserService {
         return savedUser;
     }
 
+    public UserDTO authenticateUser(String name, String password) {
+        // Check if user exists
+        UserDTO foundUser = repo.findByName(name);
+        if (foundUser == null) {
+            // Interrupt authentication
+            throw new UserNotFoundException(name);
+        }
+        // Fetch password
+        String dbPassword  = repo.getPassword(name);
+        if (dbPassword == null || dbPassword.isBlank()) {
+            throw new InvalidUserException("User has no password");
+        }
+        // Authenticate
+        if (dbPassword.equals(password)) {
+            return foundUser;
+        }
+        return null;
+    }
+
 //    public void updateUser(Long id, User update) {
 //        if (repo.findById(id) == null) {
 //            throw new BookNotFoundException(id);
@@ -78,9 +93,5 @@ public class UserServiceImpl implements UserService {
 //        }
 //        repo.deleteById(id);
 //    }
-
-    public void deleteAllUsers() {
-        repo.deleteAll();
-    }
 
 }

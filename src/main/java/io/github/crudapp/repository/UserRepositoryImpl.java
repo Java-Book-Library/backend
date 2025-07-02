@@ -1,7 +1,5 @@
 package io.github.crudapp.repository;
 
-import io.github.crudapp.model.book.Book;
-import io.github.crudapp.model.book.BookDTO;
 import io.github.crudapp.model.user.User;
 import io.github.crudapp.model.user.UserDTO;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -92,14 +90,26 @@ public class UserRepositoryImpl implements UserRepository {
         jdbc.update(sql, params.toArray());
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM users WHERE id = ?";
-        jdbc.update(sql, id);
+    public String getPassword(String name) {
+        String sql = "SELECT password FROM users WHERE name = ?";
+        try {
+            return jdbc.queryForObject(sql, (rs, rowNum) ->
+                rs.getString("password"),
+                name
+            );
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 
-    public void deleteAll() {
-        String sql = "TRUNCATE TABLE users";
-        jdbc.update(sql);
-    }
+//    public void deleteById(Long id) {
+//        String sql = "DELETE FROM users WHERE id = ?";
+//        jdbc.update(sql, id);
+//    }
+//
+//    public void deleteAll() {
+//        String sql = "TRUNCATE TABLE users";
+//        jdbc.update(sql);
+//    }
 
 }
