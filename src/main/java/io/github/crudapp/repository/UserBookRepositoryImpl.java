@@ -23,8 +23,11 @@ public class UserBookRepositoryImpl implements UserBookRepository {
         this.jdbc = jdbcTemplate;
     }
 
-    public List<Book> findBooksByUserId(Long id) {
-        String sql = "SELECT * FROM books WHERE id = ?";
+    public List<Book> findBooksByUserId(Long userId) {
+        String sql = "SELECT b.id, b.title, b.author, b.price " +
+                    "FROM books b " +
+                    "JOIN user_book ub ON b.id = ub.book_id " +
+                    "WHERE ub.user_id = ?";
         return jdbc.query(sql, (rs, rowNum) ->
             new Book(
                     rs.getLong("id"),
@@ -32,18 +35,21 @@ public class UserBookRepositoryImpl implements UserBookRepository {
                     rs.getString("author"),
                     rs.getDouble("price")
             ),
-            id
+            userId
         );
     }
 
-    public List<UserDTO> findUsersByBookId(Long id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
+    public List<UserDTO> findUsersByBookId(Long bookId) {
+        String sql = "SELECT u.id, u.name " +
+                    "FROM users u " +
+                    "JOIN user_book ub ON u.id = ub.user_id " +
+                    "WHERE ub.book_id = ?";
         return jdbc.query(sql, (rs, rowNum) ->
             new UserDTO(
                     rs.getLong("id"),
                     rs.getString("name")
             ),
-            id
+            bookId
         );
     }
 

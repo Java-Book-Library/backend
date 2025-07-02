@@ -20,18 +20,6 @@ public class UserBookServiceImpl implements UserBookService {
         this.repo = repo;
     }
 
-    private void validate(User user) {
-        if (user == null) {
-            throw new BookNotFoundException("User cannot be null");
-        }
-        if (user.getName() == null || user.getName().isBlank()) {
-            throw new InvalidBookException("Username cannot be empty");
-        }
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new InvalidBookException("Password cannot be empty");
-        }
-    }
-
     public List<Book> getBooksByUserId(Long userId) {
         List<Book> books = repo.findBooksByUserId(userId);
         if (books.isEmpty()) {
