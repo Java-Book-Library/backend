@@ -36,6 +36,10 @@ public class UserBookServiceImpl implements UserBookService {
         return users;
     }
 
+    public boolean isBookBorrowedByUser(Long userId, Long bookId) {
+        return repo.isBookBorrowedByUser(userId, bookId);
+    }
+
     public void borrowBook(BorrowRequest request) {
         repo.borrowBook(request.getUserId(), request.getBookId());
     }

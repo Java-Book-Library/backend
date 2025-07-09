@@ -11,6 +11,7 @@ public interface UserBookService {
 
     List<Book> getBooksByUserId(Long userId);
     List<UserDTO> getUsersByBookId(Long bookId);
+    public boolean isBookBorrowedByUser(Long userId, Long bookId);
     void borrowBook(BorrowRequest request);
     void returnBook(BorrowRequest request);
 

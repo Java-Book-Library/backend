@@ -54,8 +54,11 @@ public class UserBookRepositoryImpl implements UserBookRepository {
     }
 
     public boolean isBookBorrowedByUser(Long userId, Long bookId) {
-        List<UserDTO> users = findUsersByBookId(bookId);
-        return !users.isEmpty();
+        String sql = "SELECT COUNT(*) " +
+                    "FROM user_book " +
+                    "WHERE user_id = ? AND book_id = ?";
+        Integer count = jdbc.queryForObject(sql, Integer.class, userId, bookId);
+        return count != null && count > 0;
     }
 
     public void borrowBook(Long userId, Long bookId) {
