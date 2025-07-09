@@ -31,8 +31,11 @@ public class UserBookController {
     }
 
     @GetMapping("/book/is-borrowed")
-    public ResponseEntity<Boolean> isBookBorrowedByUser(@RequestBody BorrowRequest request) {
-        boolean isBorrowed = service.isBookBorrowedByUser(request.getUserId(), request.getBookId());
+    public ResponseEntity<Boolean> isBookBorrowedByUser(
+            @RequestParam Long userId,
+            @RequestParam Long bookId
+    ) {
+        boolean isBorrowed = service.isBookBorrowedByUser(userId, bookId);
         return ResponseEntity.ok(isBorrowed); // 200 OK
     }
 
